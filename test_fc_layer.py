@@ -9,19 +9,19 @@ def test_forward():
     fc_layer = FcLayer(n_inputs, n_outputs)
     # initialize weights
     W = np.ones((n_outputs, n_inputs))
-    W_0 = np.ones((n_outputs, 1))
+    W_0 = np.ones((1, n_outputs))
     fc_layer.set_weights(W, W_0)
     # create a layer input
     layer_input = np.ones((1, n_inputs))
     # execute the layer
     layer_output = fc_layer.forward(layer_input)
     # compare the layer output to the expected one
-    expected_output = np.array([16, 16, 16, 16]).T
+    expected_output = np.array([[16., 16., 16., 16.]])
     assert (np.array_equal(layer_output, expected_output))
 
 
 def test_backword():
-    pass
+    assert (1==2)
 
 
 def test_fc_layer_initializaiton():

@@ -35,10 +35,7 @@ class FcLayer:
         :return:
         """
         self.current_input = layer_input
-        print(self.W)
-        print(self.current_input)
-        print(np.dot(self.W, self.current_input.T))
-        self.current_output = np.dot(self.W, self.current_input.T) + self.W_0.T
+        self.current_output = np.dot(self.W, self.current_input.T).T + self.W_0
         return self.current_output
 
     def backward(self, output_matrix):
