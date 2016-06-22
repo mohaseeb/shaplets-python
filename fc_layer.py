@@ -23,6 +23,12 @@ class FcLayer:
         self.current_input = None
         # layer output holder
         self.current_output = None
+        # derivative of Loss w.r.t. inputs
+        self.dL_dinput = None
+        # derivative of Loss w.r.t. weights
+        self.dL_dW = None
+        # derivative of Loss w.r.t. biases
+        self.dL_dW_0 = None
 
     def set_weights(self, W, W_0):
         self.W = W
@@ -35,16 +41,20 @@ class FcLayer:
         :return:
         """
         self.current_input = layer_input
-        self.current_output = np.dot(self.W, self.current_input.T).T + self.W_0
-        return self.current_output
+        self.current_output = np.dot(self.W, self.current_input.T) + self.W_0
+        return self.current_output.T
 
-    def backward(self, output_matrix):
+    def backward(self, dL_dout):
         """
 
-        :param output_matrix:
-        :return:
+        :param dL_dout: (1 X output_size)
+        :return: dL_dinputs (1 X input_size), dL_dW (output_size X input_size), dL_dW_0 (output_size, 1)
         """
-        pass
+        # dL_dW calculations
+        # dL_dW_0 calculations
+        # dL_dinputs calculations
+        self.dL_dinput = np.dot(dL_dout, self.W)
+        return self.dL_dinput
 
     def update_params(self, update_matrix):
         """
