@@ -44,7 +44,7 @@ def test_backword():
     layer_input = np.random.normal(loc=0, scale=1, size=(1, n_inputs))
     # create dL_layer_doutput
     dL_layer_output = np.random.normal(loc=0, scale=1, size=(1, n_outputs))
-    # do a forward and a backward
+    # do a forward and a backward pass
     fc_layer.forward(layer_input)
     dL_input = fc_layer.backward(dL_layer_output)
     # verify dL_dinput ######

@@ -5,54 +5,85 @@ class SoftMinLayer:
     def __init__(self, sequence, alpha=-100):
         """
 
-        :param shapelet:
+        :param sequence:
+        :param alpha:
         """
         self.S = sequence
         self.L = np.size(sequence, 1)
         self.alpha = alpha
         # layer input holder
-        self.current_input = None
+        self.T = None
         # layer output holder
         self.current_output = None
-        # derivative of Loss w.r.t. inputs
-        self.dL_dinput = None
-        # derivative of Loss w.r.t. weights
-        self.dL_dW = None
-        # derivative of Loss w.r.t. biases
-        self.dL_dW_0 = None
+        # derivative of Loss w.r.t. shapelet values
+        self.dL_dS = None
+        # holder of pre-calculated values to speed up the calculations
+        self.J = None  # number of segments in input time-series
+        self.D = None  # (1 X J) distances between shapelet and the current time-series segments
+        self.xi = None  # (1 X J)
+        self.psi = None
+        self.M = None  # soft minimum distance
 
     def forward(self, layer_input):
-        self.current_input = layer_input
-        self.current_output = self.dist_soft_min(self.current_input)
-        return self.current_output
+        self.T = layer_input
+        self.M = self.dist_soft_min()
+        return self.M
 
     def backward(self, dL_dout):
         """
 
         :param dL_dout:
-        :return: dL_dS (1 X self.shapelet.get_length())
+        :return: dL_dS (1 X self.L)
         """
-        pass
+        # (1 X J): derivative of M (soft minimum) w.r.t D_j (distance between shapelet and the segment j of the
+        # time-series)
+        dM_dD = self.xi * (1 + self.alpha * (self.D - self.M))
+        # (J X L) : derivative of D_j w.r.t. S_l (shapelet value at position l)
+        dD_dS = np.zeros((self.J, self.L))
+        for j in range(self.J):
+            dD_dS[j, :] = 2 * (self.S - self.T[0, j:j + self.L]) / self.L
+        # (1 X L) : derivative of M w.r.t. S_l
+        dM_dS = np.dot(dM_dD, dD_dS)
+        # (1 X L) : derivative of L w.r.t S_l. Note dL_dout is dL_dM
+        self.dL_dS = dL_dout * dM_dS
+        return self.dL_dS
 
-    def dist_soft_min(self, T):
-        Q = T.size
-        J = Q - self.L
+    def dist_soft_min(self):
+        Q = self.T.size
+        self.J = Q - self.L + 1
         M_numerator = 0
-        M_denominator = 0
         # for each segment of T
-        for j in range(J + 1):
-            D = self.dist_sqr_error(T[0, j:j + self.L])
-            xi = np.exp(self.alpha * D)
-            M_numerator += D * xi
-            M_denominator += xi
-        return M_numerator / M_denominator
+        self.D = np.zeros((1, self.J))
+        self.xi = np.zeros((1, self.J))
+        self.psi = 0
+        for j in range(self.J):
+            self.D[0, j] = self.dist_sqr_error(self.T[0, j:j + self.L])
+            self.xi[0, j] = np.exp(self.alpha * self.D[0, j])
+            M_numerator += self.D[0, j] * self.xi[0, j]
+            self.psi += self.xi[0, j]
+        return M_numerator / self.psi
 
-    def dist_sqr_error(self, T):
+    def dist_sqr_error(self, T_j):
         """
 
         :param T:
         :return:
         """
-        dist = (T - self.S) ** 2
+        dist = (T_j - self.S) ** 2
         dist = np.sum(dist) / self.L
         return dist
+
+    def get_params(self):
+        """
+
+        :return:
+        """
+        return self.S
+
+    def set_params(self, param):
+        """
+
+        :param param:
+        :return:
+        """
+        self.S = param
