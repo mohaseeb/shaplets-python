@@ -3,8 +3,10 @@ from __future__ import division
 import numpy as np
 
 
-class CrossEntropyLayer:
-    def __init__(self):
+class CrossEntropyLossLayer:
+    def __init__(self, lamda, training_data_size):
+        self.lamda = lamda
+        self.I = training_data_size
         self.output_size = 1
         # layer input holder
         self.current_input_probabilities = None
@@ -14,6 +16,8 @@ class CrossEntropyLayer:
         self.dL_dinput = None
         # target probabilities
         self.current_target_probabilities = None
+        # parameters to be penalized in the loss function
+        self.regularized_params = None
 
     def set_current_target_probabilities(self, target_probabilities):
         self.current_target_probabilities = target_probabilities
@@ -24,6 +28,9 @@ class CrossEntropyLayer:
             -1 * self.current_target_probabilities * np.log(self.current_input_probabilities) + (
                 self.current_target_probabilities - 1) * np.log(
                 1 - self.current_input_probabilities))
+        # regularization part
+        self.current_output += self.lamda * np.sum(self.regularized_params ** 2) / (
+            self.I * self.current_input_probabilities.size)
         return self.current_output
 
     def backward(self, dL_dout):
@@ -31,3 +38,6 @@ class CrossEntropyLayer:
                          (1 - self.current_target_probabilities) / (1 - self.current_input_probabilities)
         self.dL_dinput *= dL_dout
         return self.dL_dinput
+
+    def set_regularized_params(self, regularized_params):
+        self.regularized_params = regularized_params

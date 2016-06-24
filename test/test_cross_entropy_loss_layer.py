@@ -1,16 +1,20 @@
 import numpy as np
-from layers.cross_entropy_layer import CrossEntropyLayer
+from layers.cross_entropy_loss_layer import CrossEntropyLossLayer
 from util import utils
 
 
 def test_forward():
+    training_data_size = 10
+    lamda = 0.01
+    params = np.array([[1, 2, 3, 4]])
     # create a cross entropy layer
-    layer = CrossEntropyLayer()
+    layer = CrossEntropyLossLayer(lamda, training_data_size)
     # create a layer input,
     input_probabilities = np.array([0.1, 0.4, 0.5])
     target_probabilities = np.array([0, 0, 1])
     # execute the layer
     layer.set_current_target_probabilities(target_probabilities)
+    layer.set_regularized_params(params)
     layer_output = layer.forward(input_probabilities)
     # compare the layer output to the expected one
     output_truth = 1.30933331998  # calculated by hand
@@ -18,9 +22,11 @@ def test_forward():
 
 
 def test_backward():
-    n_inputs = 4
+    training_data_size = 10
+    lamda = 0.01
+    params = np.array([[1, 2, 3, 4]])
     # create a layer
-    layer = CrossEntropyLayer()
+    layer = CrossEntropyLossLayer(lamda, training_data_size)
     # create a layer input,
     input_probabilities = np.array([[0.7, 0.4, 0.5, 0.1]])
     target_probabilities = np.array([[0, 1, 0, 0]])
@@ -28,6 +34,7 @@ def test_backward():
     dL_doutput = 1
     # perform a forward and a backward pass
     layer.set_current_target_probabilities(target_probabilities)
+    layer.set_regularized_params(params)
     layer.forward(input_probabilities)
     dL_dinput = layer.backward(dL_doutput)
     # verify dL_dinput ######
