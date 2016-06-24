@@ -3,7 +3,7 @@ from __future__ import print_function
 
 import numpy as np
 
-from layers.fc_layer import FcLayer
+from layers.linear_layer import FcLayer
 
 
 def test_fc_layer_initialization():
