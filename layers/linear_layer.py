@@ -4,7 +4,7 @@ from __future__ import print_function
 import numpy as np
 
 
-class FcLayer:
+class LinearLayer:
     def __init__(self, input_size, output_size):
         """
 
