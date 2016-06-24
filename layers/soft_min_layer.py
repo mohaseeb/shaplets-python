@@ -87,3 +87,6 @@ class SoftMinLayer:
         :return:
         """
         self.S = param
+
+    def get_size(self):
+        return self.L

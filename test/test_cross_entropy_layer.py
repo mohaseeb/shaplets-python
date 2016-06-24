@@ -31,8 +31,8 @@ def test_backward():
     layer.forward(input_probabilities)
     dL_dinput = layer.backward(dL_doutput)
     # verify dL_dinput ######
-    doutput_dinput_truth = utils.approximate_derivative(layer.forward, input_probabilities, 1,
-                                                        h=0.000001)  # n_outputs X n_inputs
+    doutput_dinput_truth = utils.approximate_derivative_wrt_inputs(layer.forward, input_probabilities, 1,
+                                                                   h=0.000001)  # n_outputs X n_inputs
     dL_dinput_truth = np.dot(dL_doutput, doutput_dinput_truth)
     result = np.isclose(dL_dinput, dL_dinput_truth)
     assert result.all()

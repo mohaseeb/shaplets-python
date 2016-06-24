@@ -49,8 +49,8 @@ def test_backword():
     fc_layer.forward(layer_input)
     dL_input = fc_layer.backward(dL_layer_output)
     # verify dL_dinput ######
-    doutput_input_truth = utils.approximate_derivative(fc_layer.forward, layer_input, n_outputs,
-                                                       h=0.01)  # n_outputs X n_inputs
+    doutput_input_truth = utils.approximate_derivative_wrt_inputs(fc_layer.forward, layer_input, n_outputs,
+                                                                  h=0.01)  # n_outputs X n_inputs
     dL_input_truth = np.dot(dL_layer_output, doutput_input_truth)
     result = np.isclose(dL_input, dL_input_truth)
     assert result.all()

@@ -28,8 +28,8 @@ def test_backward():
     sig_layer.forward(layer_input)
     dL_dinput = sig_layer.backward(dL_doutput)
     # verify dL_dinput ######
-    doutput_dinput_truth = utils.approximate_derivative(sig_layer.forward, layer_input, n_inputs,
-                                                        h=0.00001)  # n_outputs X n_inputs
+    doutput_dinput_truth = utils.approximate_derivative_wrt_inputs(sig_layer.forward, layer_input, n_inputs,
+                                                                   h=0.00001)  # n_outputs X n_inputs
     dL_dinput_truth = np.dot(dL_doutput, doutput_dinput_truth)
     result = np.isclose(dL_dinput, dL_dinput_truth)
     assert result.all()
