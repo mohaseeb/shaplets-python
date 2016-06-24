@@ -1,5 +1,6 @@
 import numpy as np
-from soft_min_layer import SoftMinLayer
+
+from layers.soft_min_layer import SoftMinLayer
 
 
 def test_forward():
@@ -22,11 +23,9 @@ def test_backward():
     soft_layer.forward(T)
     dL_dS = soft_layer.backward(dL_dM)
     # verify dL_dS ######
-    dM_dS_truth = _approximate_dlayer_dparams(soft_layer, T, h=0.01)
+    dM_dS_truth = _approximate_dlayer_dparams(soft_layer, T, h=0.00001)
     dL_dS_truth = dL_dM * dM_dS_truth
-    print(dL_dS)
-    print(dL_dS_truth)
-    result = np.isclose(dL_dS, dL_dS_truth)
+    result = np.isclose(dL_dS, dL_dS_truth, rtol=1e-05, atol=1e-04)
     assert result.all()
 
 
@@ -50,7 +49,6 @@ def _approximate_dlayer_dparams(layer, inputs, h):
         f1 = layer.forward(inputs)  # scalar
         params[0, param_id] += h
         layer.set_params(params)
-        print(params)
         f2 = layer.forward(inputs)  # 1 X n_outputs
         params[0, param_id] -= h
         layer.set_params(params)

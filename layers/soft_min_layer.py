@@ -37,7 +37,7 @@ class SoftMinLayer:
         """
         # (1 X J): derivative of M (soft minimum) w.r.t D_j (distance between shapelet and the segment j of the
         # time-series)
-        dM_dD = self.xi * (1 + self.alpha * (self.D - self.M))
+        dM_dD = self.xi * (1 + self.alpha * (self.D - self.M)) / self.psi
         # (J X L) : derivative of D_j w.r.t. S_l (shapelet value at position l)
         dD_dS = np.zeros((self.J, self.L))
         for j in range(self.J):

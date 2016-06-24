@@ -51,7 +51,9 @@ class FcLayer:
         :return: dL_dinputs (1 X input_size), dL_dW (output_size X input_size), dL_dW_0 (output_size, 1)
         """
         # dL_dW calculations
+        # TODO
         # dL_dW_0 calculations
+        # TODO
         # dL_dinputs calculations
         self.dL_dinput = np.dot(dL_dout, self.W)
         return self.dL_dinput
