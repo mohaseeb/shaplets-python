@@ -9,9 +9,8 @@ def test_fc_layer_initialization():
     n_inputs = 15
     n_outputs = 4
     fc_layer = LinearLayer(n_inputs, n_outputs)
-    W, W_0 = fc_layer.get_params()
-    assert (W.shape == (n_outputs, n_inputs))
-    assert (W_0.shape == (n_outputs, 1))
+    W = fc_layer.get_params()
+    assert (W.shape == (1, n_outputs * (n_inputs + 1)))
 
 
 def test_forward():
@@ -37,8 +36,8 @@ def test_backword():
     :return:
     """
     # create a layer
-    n_inputs = 15
-    n_outputs = 4
+    n_inputs = 3
+    n_outputs = 2
     # create a layer
     fc_layer = LinearLayer(n_inputs, n_outputs)
     # create a layer input
@@ -47,10 +46,17 @@ def test_backword():
     dL_layer_output = np.random.normal(loc=0, scale=1, size=(1, n_outputs))
     # do a forward and a backward pass
     fc_layer.forward(layer_input)
-    dL_input = fc_layer.backward(dL_layer_output)
+    dL_input, dL_dparams = fc_layer.backward(dL_layer_output)
     # verify dL_dinput ######
     doutput_input_truth = utils.approximate_derivative_wrt_inputs(fc_layer.forward, layer_input, n_outputs,
                                                                   h=0.01)  # n_outputs X n_inputs
     dL_input_truth = np.dot(dL_layer_output, doutput_input_truth)
     result = np.isclose(dL_input, dL_input_truth)
+    assert result.all()
+    # verify dL_dW
+    dout_dparams_truth = utils.approximate_derivative_wrt_params(fc_layer, layer_input, n_outputs, h=0.0001)
+    dL_dparams_truth = np.dot(dL_layer_output, dout_dparams_truth)
+    print(dL_dparams)
+    print(dL_dparams_truth)
+    result = np.isclose(dL_dparams, dL_dparams_truth, rtol=1e-05, atol=1e-03)
     assert result.all()

@@ -36,5 +36,5 @@ def test_backward():
     # verify dL_dS ######
     dout_dparams_truth = utils.approximate_derivative_wrt_params(aggregator, T, n_outputs, h=0.00001)
     dL_dparams_truth = np.dot(dL_dout, dout_dparams_truth)
-    result = np.isclose(dL_dparams, dL_dparams_truth, rtol=1e-05, atol=1e-04)
+    result = np.isclose(dL_dparams, dL_dparams_truth, rtol=1e-05, atol=1e-03)
     assert result.all()
