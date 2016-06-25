@@ -48,18 +48,19 @@ class LtsShapeletClassifier:
         # shapelets layer
         self.network.add_layer(self._create_shapelets_aggregation_layer())
         # linear layer
-        self.network.add_layer(LinearLayer(self.n_shapelets, self.output_size, self.eta, self.lamda, self.train_size))
+        self.network.add_layer(LinearLayer(self.n_shapelets, self.output_size, self.eta, self.lamda, self.train_size),
+                               regularized=True)
         # sigmoid layer
         self.network.add_layer(SigmoidLayer(self.output_size))
         # loss layer
         self.network.add_layer(CrossEntropyLossLayer(self.lamda, self.train_size))
 
     def _train_network(self):
-        loss = np.array((1, self.epocs * self.train_size))
+        loss = np.zeros((1, self.epocs * self.train_size))
         for epoc in range(self.epocs):
-            for sample_id in range(len(self.train_size)):
-                sample = self.train_data[sample_id]
-                label = self.train_labels[sample_id]
+            for sample_id in range(self.train_size):
+                sample = np.array([self.train_data[sample_id]])
+                label = np.array([self.train_labels[sample_id]])
                 # perform a forward pass
                 loss[0, epoc * self.train_size + sample_id] = self.network.forward(sample, label)
                 # perform a backward pass
@@ -67,7 +68,7 @@ class LtsShapeletClassifier:
                 # perform a parameter update
                 self.network.update_params()
             # print current loss info
-            print("epoc=" + str(epoc) + " loss=" + loss[0, (epoc + 1) * self.train_size - 1])
+            print("epoc=" + str(epoc) + " loss=" + str(loss[0, (epoc + 1) * self.train_size - 1]))
             # plot if needed
             if self.loss_plot:
                 self._plot_loss(loss)
@@ -76,7 +77,7 @@ class LtsShapeletClassifier:
         # Shapelets are included in SoftMinLayers
         min_soft_layers = []
         for k in range(self.K):
-            for r in range(self.R):
+            for r in range(1, self.R + 1):
                 # TODO use the top K-mean centroids to initialize the shapelets
                 min_soft_layers.append(
                     SoftMinLayer(np.random.normal(loc=0, scale=1, size=(1, r * self.L_min)), self.eta, self.alpha))

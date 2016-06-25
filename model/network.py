@@ -1,20 +1,23 @@
 from layers.cross_entropy_loss_layer import CrossEntropyLossLayer
+import numpy as np
 
 
 class Network:
     def __init__(self):
         self.layers = []
+        self.regularized = []
 
-    def add_layer(self, layer):
+    def add_layer(self, layer, regularized=False):
         self.layers.append(layer)
+        self.regularized.append(regularized)
 
     def forward(self, sample, target):
         layer_input = sample
         for layer_id in range(len(self.layers)):
-            if type(self.layers[layer_id]) == CrossEntropyLossLayer:
-                layer_input = self.layers[layer_id].forward(layer_input, target)
-            else:
-                layer_input = self.layers[layer_id].forward(layer_input)
+            if isinstance(self.layers[layer_id], CrossEntropyLossLayer):
+                self.layers[layer_id].set_current_target_probabilities(target)
+                self.layers[layer_id].set_regularized_params(self._get_regularized_params())
+            layer_input = self.layers[layer_id].forward(layer_input)
         return layer_input
 
     def backward(self):
@@ -25,3 +28,10 @@ class Network:
     def update_params(self):
         for layer_id in range(len(self.layers)):
             self.layers[layer_id].update_params()
+
+    def _get_regularized_params(self):
+        regularized = []
+        for layer_id in range(len(self.layers)):
+            if self.regularized[layer_id]:
+                regularized.append(self.layers[layer_id].get_params())
+        return np.concatenate(regularized, axis=1)

@@ -22,6 +22,9 @@ class CrossEntropyLossLayer:
     def set_current_target_probabilities(self, target_probabilities):
         self.current_target_probabilities = target_probabilities
 
+    def set_regularized_params(self, regularized_params):
+        self.regularized_params = regularized_params
+
     def forward(self, layer_input):
         self.current_input_probabilities = layer_input
         self.current_output = np.sum(
@@ -38,9 +41,6 @@ class CrossEntropyLossLayer:
                          (1 - self.current_target_probabilities) / (1 - self.current_input_probabilities)
         self.dL_dinput *= dL_dout
         return self.dL_dinput
-
-    def set_regularized_params(self, regularized_params):
-        self.regularized_params = regularized_params
 
     def update_params(self):
         pass

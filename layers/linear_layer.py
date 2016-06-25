@@ -67,7 +67,7 @@ class LinearLayer:
         self.dL_dparams = np.dot(dL_dout, dout_dparams)
         # dL_dinputs calculations
         self.dL_dinput = np.dot(dL_dout, np.reshape(self.W, (self.output_size, self.input_size)))
-        return self.dL_dinput, self.dL_dparams
+        return self.dL_dinput
 
     def update_params(self):
         """

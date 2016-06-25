@@ -64,7 +64,8 @@ class SoftMinLayer:
             self.xi[0, j] = np.exp(self.alpha * self.D[0, j])
             M_numerator += self.D[0, j] * self.xi[0, j]
             self.psi += self.xi[0, j]
-        return M_numerator / self.psi
+        M = M_numerator / self.psi
+        return M
 
     def dist_sqr_error(self, T_j):
         """
