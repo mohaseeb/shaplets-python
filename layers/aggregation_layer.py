@@ -22,10 +22,9 @@ class AggregationLayer:
 
     def forward(self, layer_input):
         self.current_input = layer_input
-        output = []
+        self.current_output = np.zeros((1, self.layers_number))
         for layer_number in range(self.layers_number):
-            output.append(self.layers[layer_number].forward(self.current_input))
-        self.current_output = np.array(output)
+            self.current_output[0, layer_number] = self.layers[layer_number].forward(self.current_input)
         return self.current_output
 
     def backward(self, dL_dout):

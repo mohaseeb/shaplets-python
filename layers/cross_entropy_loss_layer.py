@@ -4,9 +4,9 @@ import numpy as np
 
 
 class CrossEntropyLossLayer:
-    def __init__(self, lamda, training_data_size):
+    def __init__(self, lamda, train_size):
         self.lamda = lamda
-        self.I = training_data_size
+        self.I = train_size
         self.output_size = 1
         # layer input holder
         self.current_input_probabilities = None
@@ -41,3 +41,6 @@ class CrossEntropyLossLayer:
 
     def set_regularized_params(self, regularized_params):
         self.regularized_params = regularized_params
+
+    def update_params(self):
+        pass

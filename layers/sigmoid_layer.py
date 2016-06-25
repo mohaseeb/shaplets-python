@@ -21,3 +21,6 @@ class SigmoidLayer:
         dout_dinput = self.current_output * (1 - self.current_output)
         self.dL_dinput = dL_dout * dout_dinput
         return self.dL_dinput
+
+    def update_params(self):
+        pass

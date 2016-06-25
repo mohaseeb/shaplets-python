@@ -14,7 +14,7 @@ def test_forward():
     # do a forward pass
     output = aggregator.forward(T)
     # compare to the truth output
-    output_truth = [layer.forward(T) for layer in soft_min_layers]
+    output_truth = np.array([[layer.forward(T) for layer in soft_min_layers]])
     assert (np.array_equal(output, output_truth))
 
 
