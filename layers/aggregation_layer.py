@@ -62,3 +62,7 @@ class AggregationLayer:
             layer_size = self.layers[layer_number].get_size()
             self.layers[layer_number].set_params(params[0, layer_segment_id:layer_segment_id + layer_size])
             layer_segment_id += layer_size
+
+    def update_params(self):
+        for layer_number in range(self.layers_number):
+            self.layers[layer_number].update_params()

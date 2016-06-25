@@ -75,9 +75,9 @@ class LinearLayer:
         :param update_matrix:
         :return:
         """
-        self.W += - self.eta * (
+        self.W -= self.eta * (
             self.dL_dparams[0, 0:self.W.size] + 2 * self.lamda * self.W / (self.I * self.output_size))
-        self.W_0 += - self.eta * self.dL_dparams[0, self.W.size:]
+        self.W_0 -= self.eta * self.dL_dparams[0, self.W.size:]
 
     def get_params(self):
         """

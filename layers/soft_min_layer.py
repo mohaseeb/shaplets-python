@@ -2,15 +2,18 @@ import numpy as np
 
 
 class SoftMinLayer:
-    def __init__(self, sequence, alpha=-100):
+    def __init__(self, sequence, learning_rate=0.01, alpha=-100):
         """
 
+        :type alpha:
         :param sequence:
         :param alpha:
         """
         self.S = sequence
         self.L = np.size(sequence, 1)
         self.alpha = alpha
+        # learning rate
+        self.eta = learning_rate
         # layer input holder
         self.T = None
         # layer output holder
@@ -87,6 +90,9 @@ class SoftMinLayer:
         :return:
         """
         self.S = param
+
+    def update_params(self):
+        self.S -= self.eta * self.dL_dS
 
     def get_size(self):
         return self.L
