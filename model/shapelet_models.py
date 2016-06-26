@@ -10,7 +10,8 @@ import matplotlib.pyplot as pyplot
 
 
 class LtsShapeletClassifier:
-    def __init__(self, K, R, L_min, alpha=-100, learning_rate=0.01, regularization_parameter=0.01, epocs=10):
+    def __init__(self, K, R, L_min, alpha=-100, learning_rate=0.01, regularization_parameter=0.01, epocs=10,
+                 shapelet_initialization=None):
         """
 
         :param K: number of shapelets
@@ -34,6 +35,7 @@ class LtsShapeletClassifier:
         self.lamda = regularization_parameter
         # other
         self.network = None
+        self.shapelet_initialization = shapelet_initialization
         self.plot_loss = None
         self.loss_fig = None
 
@@ -54,9 +56,10 @@ class LtsShapeletClassifier:
         return predicted_labels + 1
 
     def _init_network(self):
+        print('Network initialization ...')
         self.network = Network()
         # shapelets layer
-        self.network.add_layer(self._create_shapelets_aggregation_layer())
+        self.network.add_layer(self._get_shapelets_layer())
         # linear layer
         self.network.add_layer(LinearLayer(self.n_shapelets, self.output_size, self.eta, self.lamda, self.train_size),
                                regularized=True)
@@ -65,7 +68,26 @@ class LtsShapeletClassifier:
         # loss layer
         self.network.add_layer(CrossEntropyLossLayer(self.lamda, self.train_size))
 
-    def _create_shapelets_aggregation_layer(self):
+    def _get_shapelets_layer(self):
+        if self.shapelet_initialization == 'segments_centroids':
+            return self._create_shapelets_layer_segments_centroids()
+        else:
+            return self._create_shapelets_layer_random()
+
+    def _create_shapelets_layer_segments_centroids(self):
+        # Shapelets are included in SoftMinLayers
+        min_soft_layers = []
+        for r in range(1, self.R + 1):
+            L = r * self.L_min
+            top_K_centroids_scale_r = utils.get_centroids_of_segments(self.train_data, L, self.K)
+            for centroid in top_K_centroids_scale_r:
+                min_soft_layers.append(
+                    SoftMinLayer(np.array([centroid]), self.eta, self.alpha))
+        # shapelets aggregation layer
+        aggregator = AggregationLayer(min_soft_layers)
+        return aggregator
+
+    def _create_shapelets_layer_random(self):
         # Shapelets are included in SoftMinLayers
         min_soft_layers = []
         for k in range(self.K):
@@ -78,6 +100,7 @@ class LtsShapeletClassifier:
         return aggregator
 
     def _train_network(self):
+        print('Training ...')
         loss = np.zeros((1, self.epocs * self.train_size))
         iteration = 0
         for epoc in range(self.epocs):
@@ -94,7 +117,8 @@ class LtsShapeletClassifier:
                 iteration += 1
             loss[0, epoc] = l
             # print current loss info
-            print("epoc=" + str(epoc) + "/" + str(self.epocs) + " (iteration=" + str(iteration) + ") loss=" + str(l))
+            print(
+                "epoc=" + str(epoc) + "/" + str(self.epocs - 1) + " (iteration=" + str(iteration) + ") loss=" + str(l))
             # plot if needed
             if self.plot_loss:
                 self._plot_loss(loss, epoc)
