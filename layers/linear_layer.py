@@ -79,6 +79,9 @@ class LinearLayer:
             self.dL_dparams[0, 0:self.W.size] + 2 * self.lamda * self.W / (self.I * self.output_size))
         self.W_0 -= self.eta * self.dL_dparams[0, self.W.size:]
 
+    def get_dL_dparams(self):
+        return self.dL_dparams
+
     def get_params(self):
         """
 

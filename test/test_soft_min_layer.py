@@ -1,6 +1,6 @@
 import numpy as np
 
-from layers.soft_min_layer import SoftMinLayer
+from layers import SoftMinLayer
 from util import utils
 
 

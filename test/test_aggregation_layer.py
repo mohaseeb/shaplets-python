@@ -1,5 +1,5 @@
 from util import soft_min_layer_factory, utils
-from layers.aggregation_layer import AggregationLayer
+from layers import AggregationLayer
 import numpy as np
 
 

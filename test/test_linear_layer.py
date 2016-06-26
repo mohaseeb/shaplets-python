@@ -1,7 +1,7 @@
 from __future__ import division
 from __future__ import print_function
 import numpy as np
-from layers.linear_layer import LinearLayer
+from layers import LinearLayer
 from util import utils
 
 
@@ -53,7 +53,8 @@ def test_backword():
     dL_layer_output = np.random.normal(loc=0, scale=1, size=(1, n_outputs))
     # do a forward and a backward pass
     fc_layer.forward(layer_input)
-    dL_input, dL_dparams = fc_layer.backward(dL_layer_output)
+    dL_input = fc_layer.backward(dL_layer_output)
+    dL_dparams = fc_layer.get_dL_dparams()
     # verify dL_dinput ######
     doutput_input_truth = utils.approximate_derivative_wrt_inputs(fc_layer.forward, layer_input, n_outputs,
                                                                   h=0.01)  # n_outputs X n_inputs

@@ -1,5 +1,5 @@
 from util import ucr_dataset_loader
-from model.shapelet_models import LtsShapeletClassifier
+from model import LtsShapeletClassifier
 from sklearn.metrics import confusion_matrix, classification_report
 
 

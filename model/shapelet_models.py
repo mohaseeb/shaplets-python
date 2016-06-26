@@ -1,13 +1,12 @@
-from layers.soft_min_layer import SoftMinLayer
-from layers.aggregation_layer import AggregationLayer
-from layers.linear_layer import LinearLayer
-from layers.sigmoid_layer import SigmoidLayer
-from layers.cross_entropy_loss_layer import CrossEntropyLossLayer
+from layers import SoftMinLayer
+from layers import AggregationLayer
+from layers import LinearLayer
+from layers import SigmoidLayer
+from layers import CrossEntropyLossLayer
 from network import Network
 from util import utils
 import numpy as np
 import matplotlib.pyplot as pyplot
-import time
 
 
 class LtsShapeletClassifier:

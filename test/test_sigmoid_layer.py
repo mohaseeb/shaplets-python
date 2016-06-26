@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.special import expit
-from layers.sigmoid_layer import SigmoidLayer
+from layers import SigmoidLayer
 from util import utils
 
 

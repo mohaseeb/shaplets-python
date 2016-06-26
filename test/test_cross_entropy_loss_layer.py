@@ -1,5 +1,5 @@
 import numpy as np
-from layers.cross_entropy_loss_layer import CrossEntropyLossLayer
+from layers import CrossEntropyLossLayer
 from util import utils
 
 
