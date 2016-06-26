@@ -48,3 +48,11 @@ def approximate_derivative_wrt_params(layer, inputs, n_outputs, h):
 
 def sigmoid(X):
     return np.array([[(1 / (1 + math.exp(-x))) for x in X[0, :]]])
+
+
+def get_one_active_representation(labels):
+    classes = np.unique(labels)
+    one_active_labels = np.zeros((labels.size, classes.size))
+    for label_id in range(labels.size):
+        one_active_labels[label_id, np.where(classes == labels[label_id])] = 1
+    return one_active_labels

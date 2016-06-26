@@ -11,6 +11,10 @@ class Network:
         self.layers.append(layer)
         self.regularized.append(regularized)
 
+    def remove_loss_layer(self):
+        if isinstance(self.layers[-1], CrossEntropyLossLayer):
+            del self.layers[-1]
+
     def forward(self, sample, target):
         layer_input = sample
         for layer_id in range(len(self.layers)):
