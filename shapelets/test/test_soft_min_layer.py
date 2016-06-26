@@ -1,7 +1,7 @@
 import numpy as np
 
-from layers import SoftMinLayer
-from util import utils
+from shapelets.network import SoftMinLayer
+from shapelets.util import utils
 
 
 def test_forward():

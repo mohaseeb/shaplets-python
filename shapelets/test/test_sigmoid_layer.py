@@ -1,7 +1,9 @@
-import numpy as np
 from scipy.special import expit
-from layers import SigmoidLayer
-from util import utils
+
+import numpy as np
+
+from shapelets.network import SigmoidLayer
+from shapelets.util import utils
 
 
 def test_forward():

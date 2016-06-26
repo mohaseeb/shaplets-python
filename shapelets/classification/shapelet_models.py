@@ -1,12 +1,13 @@
-from layers import SoftMinLayer
-from layers import AggregationLayer
-from layers import LinearLayer
-from layers import SigmoidLayer
-from layers import CrossEntropyLossLayer
-from network import Network
-from util import utils
-import numpy as np
 import matplotlib.pyplot as pyplot
+import numpy as np
+
+from shapelets.network import AggregationLayer
+from shapelets.network import CrossEntropyLossLayer
+from shapelets.network import LinearLayer
+from shapelets.network import Network
+from shapelets.network import SigmoidLayer
+from shapelets.network import SoftMinLayer
+from shapelets.util import utils
 
 
 class LtsShapeletClassifier:

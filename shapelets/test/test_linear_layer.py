@@ -1,8 +1,10 @@
 from __future__ import division
 from __future__ import print_function
+
 import numpy as np
-from layers import LinearLayer
-from util import utils
+
+from shapelets.network import LinearLayer
+from shapelets.util import utils
 
 
 def test_fc_layer_initialization():

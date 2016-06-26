@@ -1,4 +1,4 @@
-from layers import CrossEntropyLossLayer
+from . import CrossEntropyLossLayer
 import numpy as np
 
 
