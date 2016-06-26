@@ -105,6 +105,8 @@ class LtsShapeletClassifier:
     def _plot_loss(self, loss, epocs):
         if self.loss_fig is None:
             self.loss_fig = pyplot.figure()
+            pyplot.xlabel("epoc")
+            pyplot.ylabel("loss")
             pyplot.ion()
         pyplot.plot(range(epocs + 1), loss[0, 0:epocs + 1], color='blue')
         pyplot.pause(0.05)
