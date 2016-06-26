@@ -12,7 +12,7 @@ def _evaluate_LtcShapeletClassifier(dataset_name, base_folder):
     Q = train_data.shape[1]
     K = int(0.15 * Q)
     L_min = int(0.2 * Q)
-    classifier = LtsShapeletClassifier(K=K, R=3, L_min=L_min, epocs=2, regularization_parameter=0.01,
+    classifier = LtsShapeletClassifier(K=K, R=3, L_min=L_min, epocs=600, regularization_parameter=0.01,
                                        learning_rate=0.01, shapelet_initialization='segments_centroids')
     # train the classifier
     classifier.fit(train_data, train_label, plot_loss=True)
