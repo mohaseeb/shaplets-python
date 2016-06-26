@@ -1,6 +1,7 @@
 from __future__ import print_function
 import numpy as np
 import math
+from sklearn.cluster import KMeans
 
 
 def approximate_derivative_wrt_inputs(function, inputs, n_outputs, h):
@@ -56,3 +57,41 @@ def get_one_active_representation(labels):
     for label_id in range(labels.size):
         one_active_labels[label_id, np.where(classes == labels[label_id])] = 1
     return one_active_labels
+
+
+def get_centroids_of_segments(data, L, K):
+    """
+
+    :param data: the dataset
+    :param L: segment length
+    :param K: number of centroids
+    :return: the top K centroids of the clustered segments
+    """
+    data_segmented = segment_dataset(data, L)
+    centroids = get_centroids(data_segmented, K)
+    return centroids
+
+
+def segment_dataset(data, L):
+    """
+
+    :param data:
+    :param L: segment length
+    :return:
+    """
+    # number of time series, time series size
+    I, Q = data.shape
+    # number of segments in a time series
+    J = Q - L + 1
+    S = np.zeros((J * I, L))
+    # create segments
+    for i in range(I):
+        for j in range(J):
+            S[i * J + j, :] = data[i, j:j + L]
+    return S
+
+
+def get_centroids(data, k):
+    clusterer = KMeans(n_clusters=k)
+    clusterer.fit(data)
+    return clusterer.cluster_centers_
