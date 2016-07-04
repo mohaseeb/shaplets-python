@@ -93,7 +93,6 @@ class LtsShapeletClassifier:
         min_soft_layers = []
         for k in range(self.K):
             for r in range(1, self.R + 1):
-                # TODO use the segments top K-mean centroids to initialize the shapelets
                 min_soft_layers.append(
                     SoftMinLayer(np.random.normal(loc=0, scale=1, size=(1, r * self.L_min)), self.eta, self.alpha))
         # shapelets aggregation layer
