@@ -5,6 +5,8 @@ Python implementation of [the Learning Time-Series Shapelets method](http://www.
 
 This implementation view the model as a layered network, where each layer implements a forward, a backword and parameters update methods. This abstraction makes it easy to port the implementation to a framework like Torch or Tensorflow.
 
+[Network diagram!](lts.png)
+
 ## Usage
 
 ```python
