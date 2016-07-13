@@ -3,10 +3,10 @@ Python implementation of [the Learning Time-Series Shapelets method](http://www.
 
 This implementation view the model as a layered network, where each layer implements a forward, a backword and parameters update methods. This abstraction makes it easy to port the implementation to a frameworks like Torch or Tensorflow. Check the diagram at the bottom of this page.
 
-Note, the loss in this implementation is an updated version of the one in the paper to allow training a single network for all the classes in the dataset (rather than one network/class). For details check shapelets/network/cross_entropy_loss_layer.py
+Note, the loss in this implementation is an updated version of the one in the paper to allow training a single network for all the classes in the dataset (rather than one network/class). The impact on performance was not estimated. For details check shapelets/network/cross_entropy_loss_layer.py
 
 ## Usage
-
+See below. Also checkout example.py.
 ```python
 from shapelets.classification import LtsShapeletClassifier
 # create an LtsShapeletClassifier instance
