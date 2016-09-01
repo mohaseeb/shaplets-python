@@ -1,5 +1,8 @@
+from __future__ import division
+
 import matplotlib.pyplot as pyplot
 import numpy as np
+import copy
 
 from shapelets.network import AggregationLayer
 from shapelets.network import CrossEntropyLossLayer
@@ -30,6 +33,9 @@ class LtsShapeletClassifier:
         self.train_labels = None
         self.output_size = None
         self.train_size = None
+        # validation data
+        self.valid_data = None
+        self.valid_labels = None
         # Hyper parameters
         self.epocs = epocs
         self.eta = learning_rate
@@ -40,21 +46,25 @@ class LtsShapeletClassifier:
         self.plot_loss = None
         self.loss_fig = None
 
-    def fit(self, train_data, train_labels, plot_loss=False):
+    def fit(self, train_data, train_labels, valid_data, valid_labels, plot_loss=False):
         self.train_data = train_data
         self.train_labels = utils.get_one_active_representation(train_labels)
+        self.valid_data = valid_data
+        self.valid_labels = valid_labels
         self.train_size, self.output_size = self.train_labels.shape
         self.plot_loss = plot_loss
         self._init_network()
         self._train_network()
 
     def predict(self, test_data):
+        tmp_network = copy.deepcopy(self.network)
         self.network.remove_loss_layer()
         predicted_labels = np.zeros((test_data.shape[0], 1))
         for i in range(test_data.shape[0]):
             predicted_probabilities = self.network.forward(np.array([test_data[i, :]]), None)
             predicted_labels[i, 0] = np.argmax(predicted_probabilities)
-        return predicted_labels + 1
+        self.network = tmp_network
+        return predicted_labels
 
     def _init_network(self):
         print('Network initialization ...')
@@ -102,6 +112,7 @@ class LtsShapeletClassifier:
     def _train_network(self):
         print('Training ...')
         loss = np.zeros((1, self.epocs * self.train_size))
+        valid_accur = np.zeros((1, self.epocs * self.train_size))
         iteration = 0
         for epoc in range(self.epocs):
             l = 10000
@@ -116,20 +127,25 @@ class LtsShapeletClassifier:
                 self.network.update_params()
                 iteration += 1
             loss[0, epoc] = l
+            # calculate accuracy in validation set
+            valid_epoc_accur = np.sum(np.equal(self.predict(self.valid_data), self.valid_labels)) / \
+                               self.valid_labels.shape[0]
+            valid_accur[0, epoc] = valid_epoc_accur
             # print current loss info
-            print(
-                "epoc=" + str(epoc) + "/" + str(self.epocs - 1) + " (iteration=" + str(iteration) + ") loss=" + str(l))
+            print("epoc=" + str(epoc) + "/" + str(self.epocs - 1) + " (iteration=" + str(iteration) + ") loss=" + str(l)
+                  + " validation accuracy=" + str(valid_epoc_accur))
             # plot if needed
             if self.plot_loss:
-                self._plot_loss(loss, epoc)
+                self._plot_loss(loss, valid_accur, epoc)
         if self.plot_loss:
             pyplot.savefig('loss.jpg')
 
-    def _plot_loss(self, loss, epocs):
+    def _plot_loss(self, loss, validation_acc, epocs):
         if self.loss_fig is None:
             self.loss_fig = pyplot.figure()
             pyplot.xlabel("epoc")
-            pyplot.ylabel("loss")
+            pyplot.ylabel("loss/validation_acc")
             pyplot.ion()
-        pyplot.plot(range(epocs + 1), loss[0, 0:epocs + 1], color='blue')
+        pyplot.plot(range(epocs + 1), loss[0, 0:epocs + 1], color='red', label='loss')
+        pyplot.plot(range(epocs + 1), validation_acc[0, 0:epocs + 1], color='blue', label='validation accuracy')
         pyplot.pause(0.05)
