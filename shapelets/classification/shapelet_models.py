@@ -58,12 +58,12 @@ class LtsShapeletClassifier:
 
     def predict(self, test_data):
         tmp_network = copy.deepcopy(self.network)
-        self.network.remove_loss_layer()
+        tmp_network.remove_loss_layer()
         predicted_labels = np.zeros((test_data.shape[0], 1))
         for i in range(test_data.shape[0]):
-            predicted_probabilities = self.network.forward(np.array([test_data[i, :]]), None)
+            predicted_probabilities = tmp_network.forward(np.array([test_data[i, :]]), None)
             predicted_labels[i, 0] = np.argmax(predicted_probabilities)
-        self.network = tmp_network
+        del tmp_network
         return predicted_labels
 
     def _init_network(self):
@@ -81,8 +81,10 @@ class LtsShapeletClassifier:
 
     def _get_shapelets_layer(self):
         if self.shapelet_initialization == 'segments_centroids':
+            print('Using training data to initialize shaplets')
             return self._create_shapelets_layer_segments_centroids()
         else:
+            print('Randomly initialize shapelets')
             return self._create_shapelets_layer_random()
 
     def _create_shapelets_layer_segments_centroids(self):
@@ -128,8 +130,9 @@ class LtsShapeletClassifier:
                 iteration += 1
             loss[0, epoc] = l
             # calculate accuracy in validation set
-            valid_epoc_accur = np.sum(np.equal(self.predict(self.valid_data), self.valid_labels)) / \
-                               self.valid_labels.shape[0]
+            # valid_epoc_accur = np.sum(np.equal(self.predict(self.valid_data), self.valid_labels)) / \
+            #                    self.valid_labels.shape[0]
+            valid_epoc_accur =0
             valid_accur[0, epoc] = valid_epoc_accur
             # print current loss info
             print("epoc=" + str(epoc) + "/" + str(self.epocs - 1) + " (iteration=" + str(iteration) + ") loss=" + str(l)
