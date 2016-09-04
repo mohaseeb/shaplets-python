@@ -1,8 +1,10 @@
 from __future__ import division
 
+import copy
+
 import matplotlib.pyplot as pyplot
 import numpy as np
-import copy
+from sklearn.base import BaseEstimator
 
 from shapelets.network import AggregationLayer
 from shapelets.network import CrossEntropyLossLayer
@@ -12,10 +14,12 @@ from shapelets.network import SigmoidLayer
 from shapelets.network import SoftMinLayer
 from shapelets.util import utils
 
-
-class LtsShapeletClassifier:
-    def __init__(self, K, R, L_min, alpha=-100, learning_rate=0.01, regularization_parameter=0.01, epocs=10,
-                 shapelet_initialization=None):
+"""
+This class implements the sklearn estimator interface, so sklearn tools like GridsearchCV can be used
+"""
+class LtsShapeletClassifier(BaseEstimator):
+    def __init__(self, K=20, R=3, L_min=30, alpha=-100, eta=0.01, lamda=0.01, epocs=10,
+                 shapelet_initialization='segments_centroids', plot_loss=False):
         """
 
         :param K: number of shapelets
@@ -25,7 +29,7 @@ class LtsShapeletClassifier:
         # Shapelet related
         self.K = K
         self.R = R
-        self.n_shapelets = self.K * self.R
+        self.n_shapelets = None
         self.L_min = L_min
         self.alpha = alpha
         # Training data related
@@ -38,30 +42,34 @@ class LtsShapeletClassifier:
         self.valid_labels = None
         # Hyper parameters
         self.epocs = epocs
-        self.eta = learning_rate
-        self.lamda = regularization_parameter
+        self.eta = eta  # learning rate
+        self.lamda = lamda  # regularization parameter
         # other
         self.network = None
         self.shapelet_initialization = shapelet_initialization
-        self.plot_loss = None
+        self.plot_loss = plot_loss
         self.loss_fig = None
 
-    def fit(self, train_data, train_labels, valid_data, valid_labels, plot_loss=False):
-        self.train_data = train_data
-        self.train_labels = utils.get_one_active_representation(train_labels)
-        self.valid_data = valid_data
-        self.valid_labels = valid_labels
+    def set_params(self, **parameters):
+        for parameter, value in parameters.items():
+            setattr(self, parameter, value)
+        return self
+
+    def fit(self, X, y):
+        self.n_shapelets = self.K * self.R
+        self.train_data = X
+        self.train_labels = utils.get_one_active_representation(y)
         self.train_size, self.output_size = self.train_labels.shape
-        self.plot_loss = plot_loss
         self._init_network()
         self._train_network()
+        return self
 
-    def predict(self, test_data):
+    def predict(self, X):
         tmp_network = copy.deepcopy(self.network)
         tmp_network.remove_loss_layer()
-        predicted_labels = np.zeros((test_data.shape[0], 1))
-        for i in range(test_data.shape[0]):
-            predicted_probabilities = tmp_network.forward(np.array([test_data[i, :]]), None)
+        predicted_labels = np.zeros((X.shape[0], 1))
+        for i in range(X.shape[0]):
+            predicted_probabilities = tmp_network.forward(np.array([X[i, :]]), None)
             predicted_labels[i, 0] = np.argmax(predicted_probabilities)
         del tmp_network
         return predicted_labels
@@ -71,8 +79,15 @@ class LtsShapeletClassifier:
         self.network = Network()
         # shapelets layer
         self.network.add_layer(self._get_shapelets_layer())
+
         # linear layer
-        self.network.add_layer(LinearLayer(self.n_shapelets, self.output_size, self.eta, self.lamda, self.train_size),
+        self.network.add_layer(LinearLayer(self.n_shapelets, 24, self.eta, self.lamda, self.train_size),
+                               regularized=True)
+        # sigmoid layer
+        self.network.add_layer(SigmoidLayer(24))
+
+        # linear layer
+        self.network.add_layer(LinearLayer(24, self.output_size, self.eta, self.lamda, self.train_size),
                                regularized=True)
         # sigmoid layer
         self.network.add_layer(SigmoidLayer(self.output_size))
@@ -130,9 +145,11 @@ class LtsShapeletClassifier:
                 iteration += 1
             loss[0, epoc] = l
             # calculate accuracy in validation set
-            # valid_epoc_accur = np.sum(np.equal(self.predict(self.valid_data), self.valid_labels)) / \
-            #                    self.valid_labels.shape[0]
-            valid_epoc_accur =0
+            if self.valid_data is None:
+                valid_epoc_accur = 0
+            else:
+                valid_epoc_accur = np.sum(np.equal(self.predict(self.valid_data), self.valid_labels)) / \
+                                   self.valid_labels.shape[0]
             valid_accur[0, epoc] = valid_epoc_accur
             # print current loss info
             print("epoc=" + str(epoc) + "/" + str(self.epocs - 1) + " (iteration=" + str(iteration) + ") loss=" + str(l)
