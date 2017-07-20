@@ -5,6 +5,9 @@ This implementation view the model as a layered network, where each layer implem
 
 Note, the loss in this implementation is an updated version of the one in the paper to allow training a single network for all the classes in the dataset (rather than one network/class). The impact on performance was not estimated. For details check shapelets/network/cross_entropy_loss_layer.py
 
+## Installation ##
+TODO
+
 ## Usage ##
 See below. Also have a look at example.py in [the implementation](https://github.com/mohaseeb/shaplets-python). For a stable training, make sure all the features in dataset are [standardized](https://en.wikipedia.org/wiki/Feature_scaling#Standardization) (i.e. each has zero mean and unit variance).
 
