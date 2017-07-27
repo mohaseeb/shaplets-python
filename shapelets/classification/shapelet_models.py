@@ -158,7 +158,7 @@ class LtsShapeletClassifier(BaseEstimator):
             if self.plot_loss:
                 self._plot_loss(loss, valid_accur, epoc)
         if self.plot_loss:
-            pyplot.savefig('loss.jpg')
+            pyplot.savefig('loss.png')
 
     def _plot_loss(self, loss, validation_acc, epocs):
         if self.loss_fig is None:
