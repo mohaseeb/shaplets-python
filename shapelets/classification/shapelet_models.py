@@ -35,6 +35,7 @@ class LtsShapeletClassifier(BaseEstimator):
         # Training data related
         self.train_data = None
         self.train_labels = None
+        self._orig_labels = None
         self.output_size = None
         self.train_size = None
         # validation data
@@ -58,6 +59,7 @@ class LtsShapeletClassifier(BaseEstimator):
     def fit(self, X, y):
         self.n_shapelets = self.K * self.R
         self.train_data = X
+        self._orig_labels = y
         self.train_labels = utils.get_one_active_representation(y)
         self.train_size, self.output_size = self.train_labels.shape
         self._init_network()
@@ -130,6 +132,12 @@ class LtsShapeletClassifier(BaseEstimator):
         print('Training ...')
         loss = np.zeros((1, self.epocs * self.train_size))
         valid_accur = np.zeros((1, self.epocs * self.train_size))
+
+        if self.valid_data is None:
+            print('Using training data for validation')
+            self.valid_data = self.train_data
+            self.valid_labels = self._orig_labels
+
         iteration = 0
         for epoc in range(self.epocs):
             l = 10000
@@ -144,12 +152,15 @@ class LtsShapeletClassifier(BaseEstimator):
                 self.network.update_params()
                 iteration += 1
             loss[0, epoc] = l
+
             # calculate accuracy in validation set
-            if self.valid_data is None:
-                valid_epoc_accur = 0
-            else:
-                valid_epoc_accur = np.sum(np.equal(self.predict(self.valid_data), self.valid_labels)) / \
-                                   self.valid_labels.shape[0]
+            valid_epoc_accur = np.sum(
+                np.equal(
+                    self.predict(self.valid_data).ravel(),
+                    self.valid_labels
+                )
+            ) / self.valid_labels.shape[0]
+
             valid_accur[0, epoc] = valid_epoc_accur
             # print current loss info
             print("epoc=" + str(epoc) + "/" + str(self.epocs - 1) + " (iteration=" + str(iteration) + ") loss=" + str(l)
