@@ -3,5 +3,6 @@
 .cache/
 workspace/
 data
-loss.jpg
+loss.png
+*.egg-info
 
