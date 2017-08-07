@@ -37,7 +37,7 @@ def _evaluate_LtcShapeletClassifier(base_folder, dataset_name):
         K=K,
         R=3,
         L_min=L_min,
-        epocs=200,
+        epocs=10,
         lamda=0.01,
         eta=0.01,
         shapelet_initialization='segments_centroids',

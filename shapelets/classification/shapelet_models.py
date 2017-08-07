@@ -49,7 +49,8 @@ class LtsShapeletClassifier(BaseEstimator):
         self.network = None
         self.shapelet_initialization = shapelet_initialization
         self.plot_loss = plot_loss
-        self.loss_fig = None
+
+        self.loss_ax = self.valid_ax = None
 
     def set_params(self, **parameters):
         for parameter, value in parameters.items():
@@ -172,11 +173,20 @@ class LtsShapeletClassifier(BaseEstimator):
             pyplot.savefig('loss.png')
 
     def _plot_loss(self, loss, validation_acc, epocs):
-        if self.loss_fig is None:
-            self.loss_fig = pyplot.figure()
+        if self.loss_ax is None:
+            _, self.loss_ax = pyplot.subplots()
+            self.valid_ax = self.loss_ax.twinx()
             pyplot.xlabel("epoc")
-            pyplot.ylabel("loss/validation_acc")
             pyplot.ion()
-        pyplot.plot(range(epocs + 1), loss[0, 0:epocs + 1], color='red', label='loss')
-        pyplot.plot(range(epocs + 1), validation_acc[0, 0:epocs + 1], color='blue', label='validation accuracy')
+
+        self.loss_ax.plot(range(epocs + 1), loss[0, 0:epocs + 1], color='red')
+        self.loss_ax.set_ylabel('loss', color='red')
+        self.loss_ax.set_xlabel('epoc')
+        self.loss_ax.tick_params('y', colors='r')
+
+        self.valid_ax.plot(range(epocs + 1), validation_acc[0, 0:epocs + 1],
+                      color='blue')
+        self.valid_ax.set_ylabel('validation accuracy', color='blue')
+        self.valid_ax.tick_params('y', colors='b')
+
         pyplot.pause(0.05)
