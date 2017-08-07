@@ -1,8 +1,7 @@
 import numpy as np
-from util import soft_min_layer_factory
 
 from shapelets.network import AggregationLayer
-from shapelets.util import utils
+from shapelets.util import utils, soft_min_layer_factory
 
 
 def test_forward():

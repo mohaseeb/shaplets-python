@@ -37,7 +37,7 @@ def _evaluate_LtcShapeletClassifier(base_folder, dataset_name):
         K=K,
         R=3,
         L_min=L_min,
-        epocs=200,
+        epocs=10,
         lamda=0.01,
         eta=0.01,
         shapelet_initialization='segments_centroids',
@@ -49,6 +49,8 @@ def _evaluate_LtcShapeletClassifier(base_folder, dataset_name):
 
     # evaluate on test data
     prediction = classifier.predict(test_data)
+    print(prediction)
+    print(test_label)
     print(classification_report(test_label, prediction))
     print(confusion_matrix(test_label, prediction))
 
