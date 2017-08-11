@@ -36,4 +36,4 @@ Although I believe the architecture is good, I think the implementation is way f
 For stable training, make sure all the timeseries in the dataset are [standardized](https://en.wikipedia.org/wiki/Feature_scaling#Standardization) (i.e. each has zero mean and unit variance). 
 
 ## Model diagram
-![Network diagram](lts.png)
+![Network diagram](lts-diag.png)
