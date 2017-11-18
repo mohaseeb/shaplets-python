@@ -1,4 +1,4 @@
-from shapelets.util import utils
+from shapelets_lts.util import utils
 
 
 class SigmoidLayer:

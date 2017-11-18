@@ -1,6 +1,6 @@
 import numpy as np
 
-from shapelets.network.soft_min_layer import SoftMinLayer
+from shapelets_lts.network.soft_min_layer import SoftMinLayer
 
 
 def create_soft_min_layers(sizes):
