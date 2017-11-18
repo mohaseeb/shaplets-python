@@ -1,6 +1,6 @@
 import numpy as np
 
-from shapelets.util import utils
+from shapelets_lts.util import utils
 
 
 def test_get_centroids():

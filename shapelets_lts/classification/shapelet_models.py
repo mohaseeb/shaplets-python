@@ -6,13 +6,13 @@ import matplotlib.pyplot as pyplot
 import numpy as np
 from sklearn.base import BaseEstimator
 
-from shapelets.network import AggregationLayer
-from shapelets.network import CrossEntropyLossLayer
-from shapelets.network import LinearLayer
-from shapelets.network import Network
-from shapelets.network import SigmoidLayer
-from shapelets.network import SoftMinLayer
-from shapelets.util import utils
+from shapelets_lts.network import AggregationLayer
+from shapelets_lts.network import CrossEntropyLossLayer
+from shapelets_lts.network import LinearLayer
+from shapelets_lts.network import Network
+from shapelets_lts.network import SigmoidLayer
+from shapelets_lts.network import SoftMinLayer
+from shapelets_lts.util import utils
 
 """
 This class implements the sklearn estimator interface, so sklearn tools like GridsearchCV can be used

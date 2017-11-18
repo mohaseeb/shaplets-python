@@ -13,7 +13,7 @@ pip install .
 ```
 ## Usage ##
 ```python
-from shapelets.classification import LtsShapeletClassifier
+from shapelets_lts.classification import LtsShapeletClassifier
 # create an LtsShapeletClassifier instance
 classifier = LtsShapeletClassifier(
     K=20, 

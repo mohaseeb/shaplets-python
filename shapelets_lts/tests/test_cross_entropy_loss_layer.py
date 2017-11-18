@@ -1,7 +1,7 @@
 import numpy as np
 
-from shapelets.network import CrossEntropyLossLayer
-from shapelets.util import utils
+from shapelets_lts.network import CrossEntropyLossLayer
+from shapelets_lts.util import utils
 
 
 def test_forward():
