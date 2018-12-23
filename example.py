@@ -26,6 +26,7 @@ ucr_dataset_name = 'Gun_Point'
 
 def main():
     # load the data
+    print('\nLoading data...')
     x_train, y_train, x_test, y_test = _load_train_test_datasets()
 
     # create a classifier. (200 epochs yielded a 0.99 accuracy)
@@ -36,7 +37,7 @@ def main():
         K=K,
         R=3,
         L_min=L_min,
-        epocs=50,
+        epocs=200,
         lamda=0.01,
         eta=0.01,
         shapelet_initialization='segments_centroids',
@@ -44,9 +45,11 @@ def main():
     )
 
     # train the classifier
+    print('\nTraining...')
     clf.fit(x_train, y_train)
 
     # evaluate on test data
+    print('\nEvaluating...')
     y_pred = clf.predict(x_test)
     print(
         'classification report...\n{}'
@@ -54,6 +57,7 @@ def main():
     )
 
     # plot sample shapelets
+    print('\nPlotting sample shapelets...')
     plot_sample_shapelets(shapelets=clf.get_shapelets(), sample_size=36)
 
 
@@ -67,6 +71,7 @@ def _load_train_test_datasets():
         dataset_name=ucr_dataset_name,
         dataset_folder=ucr_dataset_base_folder
     )
+
 
 if __name__ == '__main__':
     main()

@@ -38,7 +38,7 @@ classifier = LtsShapeletClassifier(
 
 # train the classifier. 
 # train_data.shape -> (# train samples X time-series length) 
-# train_label.shape -> (# train samples X 1)
+# train_label.shape -> (# train samples)
 classifier.fit(train_data, train_label, plot_loss=True)
 
 # evaluate on test data. 
@@ -55,7 +55,7 @@ plot_sample_shapelets(shapelets=shapelets, sample_size=36)
 ```
 Also have a look at example.py. For a stable training, make sure all the features in dataset are [standardized](https://en.wikipedia.org/wiki/Feature_scaling#Standardization) (i.e. each has zero mean and unit variance).
 
-Although I believe the architecture is good, I think the implementation is way from optimal, and there is plenty of room for improvement.
-
 Example plot from plot_sample_shapelets.
 ![sample_shapelets](sample_shapelets.png)
+
+Although I believe the architecture is good, I think the implementation is way from optimal, and there is plenty of room for improvement.
