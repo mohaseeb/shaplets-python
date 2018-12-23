@@ -1,8 +1,8 @@
 # shaplets
 Python implementation of [the Learning Time-Series Shapelets method by Josif Grabocka et al.](http://www.ismll.uni-hildesheim.de/pub/pdfs/grabocka2014e-kdd.pdf), that learns a shapelet-based time-series classifier with gradient descent. 
 
-This implementation view the model as a layered network, where each layer 
-implements a forward, a backword and parameters update methods (see below 
+This implementation views the model as a layered graph, where each layer 
+implements a forward, backword and parameters update methods (see below 
 diagram). This abstraction makes it easy to think about and implement the 
 algorithm.
 ![Network diagram](lts-diag.png)
