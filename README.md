@@ -3,14 +3,13 @@ Python implementation of [the Learning Time-Series Shapelets method by Josif Gra
 
 This implementation views the model as a layered graph, where each layer 
 implements a forward, backword and parameters update methods (see below 
-diagram). This abstraction makes it easy to think about and implement the 
-algorithm.
+diagram). This abstraction simplifies thinking about the algorithm and implementing it.
 ![Network diagram](lts-diag.png)
 
-Note, the loss in this implementation is an updated version of the one in the 
-paper to allow training a single network for all the classes in the dataset 
-(rather than one network/class). The impact on performance was not estimated. 
-For details check shapelets/network/cross_entropy_loss_layer.py
+## Differences from the paper ##
+* This implmenetation employs two (LinearLayer + SigmoidLayer) pairs instead of one (LinearLayer + SigmoidLayer) pair as in the paper (and shown in above diagram). This (using two pairs) has yielded improved results on some datasets. To have a similar setup as in the paper update `shapelets_lts/classification/shapelet_models.py:LtsShapeletClassifier._init_network()`. 
+* The loss in this implementation is an updated version of the one in the 
+paper to allow training a single model for all the classes in the dataset (rather than one model/class). The impact on performance was not analysed. For details check `shapelets_lts/network/cross_entropy_loss_layer.py`
 
 ## Installation ##
 ```bash
