@@ -9,6 +9,6 @@ setup(
         'sklearn',
         'matplotlib',
     ],
-    extras_require={'dev': ['nose'], },
+    extras_require={'dev': ['ipython', 'nose'], },
     packages=find_packages()
 )

@@ -33,6 +33,9 @@ class Network:
         for layer_id in range(len(self.layers)):
             self.layers[layer_id].update_params()
 
+    def get_layers(self):
+        return self.layers
+
     def _get_regularized_params(self):
         regularized = []
         for layer_id in range(len(self.layers)):

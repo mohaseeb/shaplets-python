@@ -2,10 +2,10 @@ from __future__ import division, print_function
 
 from os.path import expanduser
 
-from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.metrics import classification_report
 
 from shapelets_lts.classification import LtsShapeletClassifier
-from shapelets_lts.util import ucr_dataset_loader
+from shapelets_lts.util import ucr_dataset_loader, plot_sample_shapelets
 
 """
 This example uses dataset from the UCR archive "UCR Time Series Classification
@@ -24,6 +24,39 @@ ucr_dataset_base_folder = expanduser('~/ws/data/UCR_TS_Archive_2015/')
 ucr_dataset_name = 'Gun_Point'
 
 
+def main():
+    # load the data
+    x_train, y_train, x_test, y_test = _load_train_test_datasets()
+
+    # create a classifier. (200 epochs yielded a 0.99 accuracy)
+    Q = x_train.shape[1]
+    K = int(0.15 * Q)
+    L_min = int(0.2 * Q)
+    clf = LtsShapeletClassifier(
+        K=K,
+        R=3,
+        L_min=L_min,
+        epocs=50,
+        lamda=0.01,
+        eta=0.01,
+        shapelet_initialization='segments_centroids',
+        plot_loss=True
+    )
+
+    # train the classifier
+    clf.fit(x_train, y_train)
+
+    # evaluate on test data
+    y_pred = clf.predict(x_test)
+    print(
+        'classification report...\n{}'
+        ''.format(classification_report(y_true=y_test, y_pred=y_pred))
+    )
+
+    # plot sample shapelets
+    plot_sample_shapelets(shapelets=clf.get_shapelets(), sample_size=36)
+
+
 def _load_train_test_datasets():
     """
     :return: numpy arrays, train_data, train_labels, test_data, test_labels
@@ -35,37 +68,5 @@ def _load_train_test_datasets():
         dataset_folder=ucr_dataset_base_folder
     )
 
-
-def _evaluate_LtcShapeletClassifier():
-    # load the data
-    train_data, train_labels, test_data, test_labels = (
-        _load_train_test_datasets()
-    )
-
-    # create a classifier (the parameter values as per Table1 for the GunPoint
-    # dataset ). 200 epochs yielded 0.99 accuracy
-    Q = train_data.shape[1]
-    K = int(0.15 * Q)
-    L_min = int(0.2 * Q)
-    classifier = LtsShapeletClassifier(
-        K=K,
-        R=3,
-        L_min=L_min,
-        epocs=200,
-        lamda=0.01,
-        eta=0.01,
-        shapelet_initialization='segments_centroids',
-        plot_loss=True
-    )
-
-    # train the classifier
-    classifier.fit(train_data, train_labels)
-
-    # evaluate on test data
-    prediction = classifier.predict(test_data)
-    print(classification_report(test_labels, prediction))
-    print(confusion_matrix(test_labels, prediction))
-
-
 if __name__ == '__main__':
-    _evaluate_LtcShapeletClassifier()
+    main()

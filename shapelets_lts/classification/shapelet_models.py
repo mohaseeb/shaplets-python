@@ -2,7 +2,7 @@ from __future__ import division
 
 import copy
 
-import matplotlib.pyplot as pyplot
+import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.base import BaseEstimator
 
@@ -66,6 +66,20 @@ class LtsShapeletClassifier(BaseEstimator):
         self._init_network()
         self._train_network()
         return self
+
+    def get_shapelets(self):
+        """
+        Returns:
+            list: List of 1-d numpy arrays, one array per shapelet.
+        """
+        # Each shapelet is contained in SoftMinLayer. SoftMinLayers are
+        # stored in AggregationLayer
+        [aggregation_layer] = [
+            layer for layer in self.network.get_layers()
+            if isinstance(layer, AggregationLayer)
+        ]
+
+        return aggregation_layer.get_shapelets()
 
     def predict(self, X):
         tmp_network = copy.deepcopy(self.network)
@@ -170,14 +184,14 @@ class LtsShapeletClassifier(BaseEstimator):
             if self.plot_loss:
                 self._plot_loss(loss, valid_accur, epoc)
         if self.plot_loss:
-            pyplot.savefig('loss.png')
+            plt.savefig('loss.png')
 
     def _plot_loss(self, loss, validation_acc, epocs):
         if self.loss_ax is None:
-            _, self.loss_ax = pyplot.subplots()
+            _, self.loss_ax = plt.subplots(figsize=(10, 10))
             self.valid_ax = self.loss_ax.twinx()
-            pyplot.xlabel("epoc")
-            pyplot.ion()
+            plt.xlabel("epoc")
+            plt.ion()
 
         self.loss_ax.plot(range(epocs + 1), loss[0, 0:epocs + 1], color='red')
         self.loss_ax.set_ylabel('loss', color='red')
@@ -189,4 +203,4 @@ class LtsShapeletClassifier(BaseEstimator):
         self.valid_ax.set_ylabel('validation accuracy', color='blue')
         self.valid_ax.tick_params('y', colors='b')
 
-        pyplot.pause(0.05)
+        plt.pause(0.05)

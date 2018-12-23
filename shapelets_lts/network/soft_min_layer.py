@@ -97,3 +97,6 @@ class SoftMinLayer:
 
     def get_size(self):
         return self.L
+
+    def get_shapelet(self):
+        return self.S.ravel()
