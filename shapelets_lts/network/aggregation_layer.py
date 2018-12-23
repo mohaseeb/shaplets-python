@@ -65,3 +65,7 @@ class AggregationLayer:
     def update_params(self):
         for layer_number in range(self.layers_number):
             self.layers[layer_number].update_params()
+
+
+    def get_shapelets(self):
+        return [layer.get_shapelet() for layer in self.layers]
