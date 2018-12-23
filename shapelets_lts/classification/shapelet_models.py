@@ -178,8 +178,10 @@ class LtsShapeletClassifier(BaseEstimator):
 
             valid_accur[0, epoc] = valid_epoc_accur
             # print current loss info
-            print("epoc=" + str(epoc) + "/" + str(self.epocs - 1) + " (iteration=" + str(iteration) + ") loss=" + str(l)
-                  + " validation accuracy=" + str(valid_epoc_accur))
+            print(
+                'epoch={}/{} (iteration={}) loss={} validation accuracy={}'
+                ''.format(epoc + 1, self.epocs, iteration, l, valid_epoc_accur)
+            )
             # plot if needed
             if self.plot_loss:
                 self._plot_loss(loss, valid_accur, epoc)

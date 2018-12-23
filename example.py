@@ -29,7 +29,7 @@ def main():
     print('\nLoading data...')
     x_train, y_train, x_test, y_test = _load_train_test_datasets()
 
-    # create a classifier. (200 epochs yielded a 0.99 accuracy)
+    # create a classifier
     Q = x_train.shape[1]
     K = int(0.15 * Q)
     L_min = int(0.2 * Q)
@@ -37,7 +37,7 @@ def main():
         K=K,
         R=3,
         L_min=L_min,
-        epocs=200,
+        epocs=30,  # (200 epochs yielded a 0.99 accuracy)
         lamda=0.01,
         eta=0.01,
         shapelet_initialization='segments_centroids',
