@@ -56,5 +56,3 @@ Also have a look at example.py. For a stable training, make sure all the feature
 
 Example plot from plot_sample_shapelets.
 ![sample_shapelets](sample_shapelets.png)
-
-Although I believe the architecture is good, I think the implementation is way from optimal, and there is plenty of room for improvement.
