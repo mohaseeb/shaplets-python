@@ -37,7 +37,7 @@ def main():
         K=K,
         R=3,
         L_min=L_min,
-        epocs=30,  # (200 epochs yielded a 0.99 accuracy)
+        epocs=30,
         lamda=0.01,
         eta=0.01,
         shapelet_initialization='segments_centroids',
