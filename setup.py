@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='shapelets-lts',
-    version='0.3.0',
+    version='0.3.1',
     install_requires=[
         'numpy>=1.15.4,<2.0.0',
         'pandas>=0.23.4,<2.0.0'
