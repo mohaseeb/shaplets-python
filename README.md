@@ -52,7 +52,7 @@ shapelets = classifier.get_shapelets()
 from shapelets_lts.util import plot_sample_shapelets
 plot_sample_shapelets(shapelets=shapelets, sample_size=36)
 ```
-Also have a look at example.py. For a stable training, make sure all the features in dataset are [standardized](https://en.wikipedia.org/wiki/Feature_scaling#Standardization) (i.e. each has zero mean and unit variance).
+Also have a look at example.py. For a stable training, the samples might need to be scaled.
 
 Example plot from plot_sample_shapelets.
 ![sample_shapelets](sample_shapelets.png)
